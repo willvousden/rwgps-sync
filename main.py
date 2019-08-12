@@ -17,8 +17,7 @@ def read_index():
 
     index = {}
     with INDEX_FILE.open('r') as f:
-        for row in csv.reader(f, delimiter=','):
-            route_id, update_time = row
+        for route_id, update_time in csv.reader(f, delimiter=','):
             index[int(route_id)] = datetime.fromisoformat(update_time)
     return index
 
