@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import argparse
-import requests
 import csv
+import requests
 
 from datetime import datetime
 from pathlib import Path
