@@ -2,6 +2,7 @@
 
 import argparse
 import requests
+import csv
 
 from datetime import datetime
 from pathlib import Path
@@ -16,16 +17,17 @@ def read_index():
 
     index = {}
     with INDEX_FILE.open('r') as f:
-        for line in f:
-            route_id, update_time = line.split()
+        for row in csv.reader(f, delimiter=','):
+            route_id, update_time = row
             index[int(route_id)] = datetime.fromisoformat(update_time)
     return index
 
 
 def write_index(index):
     with INDEX_FILE.open('w') as f:
+        writer = csv.writer(f, delimiter=',')
         for route_id, update_time in index.items():
-            print(route_id, update_time.isoformat(), file=f)
+            writer.writerow([route_id, update_time.isoformat()])
 
 
 def download_route(route_id, auth_params):
