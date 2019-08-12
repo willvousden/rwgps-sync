@@ -8,7 +8,6 @@ from pathlib import Path
 
 BASE_URI = 'https://ridewithgps.com'
 INDEX_FILE = Path('index.txt')
-DATA_DIR = Path('data/')
 
 
 def read_index():
@@ -30,17 +29,13 @@ def write_index(index):
 
 
 def download_route(route_id, auth_params):
-    return
-    r = requests.get(
-        f'{BASE_URI}/routes/{route_id}.json',
-        params=auth_params
-    )
-    (DATA_DIR / f'{route_id}.json').write_text(r.text)
+    # Download the route to disk.
+    pass
 
 
 def delete_route(route_id):
-    return
-    (DATA_DIR / f'{route_id}.json').unlink()
+    # Delete the route from disk.
+    pass
 
 
 def fetch_route_list(user_id, auth_params):
