@@ -18,5 +18,5 @@ seconds (as long as it takes to refresh the index).
 To use the API's test user:
 
 ```
-./main.py --user-id 1 --api-key testkey1 -auth-token ''
+./main.py --user-id 1 --api-key testkey1 --auth-token ''
 ```
