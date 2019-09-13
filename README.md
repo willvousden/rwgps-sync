@@ -10,6 +10,8 @@ compares it with the cached index.  Any outdated routes are re-downloaded, while
 When the index is up-to-date, no additional requests are made, and the script runs in just a few
 seconds (as long as it takes to refresh the index).
 
+Currently, it doesn't save anything to disk, but just sleeps to simulate the download.
+
 ## Dependencies
 
 * Python 3

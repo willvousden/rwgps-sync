@@ -3,15 +3,20 @@
 import argparse
 import csv
 import requests
+import time
 
 from datetime import datetime
 from pathlib import Path
 
 BASE_URI = 'https://ridewithgps.com'
 INDEX_FILE = Path('index.txt')
+DOWNLOAD_DELAY = 0.2
 
 
 def read_index():
+    '''
+    Return a map from route ID to update time from the route index file.
+    '''
     if not INDEX_FILE.exists():
         return {}
 
@@ -23,6 +28,12 @@ def read_index():
 
 
 def write_index(index):
+    '''
+    Produce an index file of all routes with columns:
+
+    1. route ID
+    2. time of last update
+    '''
     with INDEX_FILE.open('w') as f:
         writer = csv.writer(f, delimiter=',')
         for route_id, update_time in index.items():
@@ -30,16 +41,24 @@ def write_index(index):
 
 
 def download_route(route_id, auth_params):
-    # Download the route to disk.
+    '''
+    Simulate downloading the route to disk.
+    '''
+    time.sleep(DOWNLOAD_DELAY)
     pass
 
 
 def delete_route(route_id):
-    # Delete the route from disk.
+    '''
+    Simulate deleting the route from disk.
+    '''
     pass
 
 
 def fetch_route_list(user_id, auth_params):
+    '''
+    Fetch a list of all of a given user's routes from the RWGPS API.
+    '''
     # Fetch 100 routes at a time until we have them all.
     offset = 0
     limit = 100
@@ -62,6 +81,9 @@ def fetch_route_list(user_id, auth_params):
 
 
 def sync(user_id, auth_params):
+    '''
+    Sync the currently downloaded routes with the RWGPS API.
+    '''
     current_index = read_index()
     route_list = fetch_route_list(user_id, auth_params)
     print(f'found {len(route_list)} routes')
