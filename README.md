@@ -1,3 +1,5 @@
+# RideWithGPS route sync demo
+
 This Python script simulates downloading a user's routes from RideWithGPS.
 
 It maintains an index of route IDs and the times they were last updated.
