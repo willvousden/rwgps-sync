@@ -1,6 +1,6 @@
 # Fast RideWithGPS route sync demo ⚡️
 
-This Python script simulates downloading a user's routes from RideWithGPS.
+This Python script simulates downloading a user's routes from the [RideWithGPS web API](https://ridewithgps.com/api).
 
 It keeps an index of route IDs and the times they were last updated, so that it can run much
 faster when there's nothing to do 🙂
