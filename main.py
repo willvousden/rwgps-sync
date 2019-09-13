@@ -20,11 +20,12 @@ def read_index():
     if not INDEX_FILE.exists():
         return {}
 
-    index = {}
     with INDEX_FILE.open('r') as f:
-        for route_id, update_time in csv.reader(f, delimiter=','):
-            index[int(route_id)] = datetime.fromisoformat(update_time)
-    return index
+        return {
+            int(route_id): datetime.fromisoformat(update_time)
+            for route_id, update_time
+            in csv.reader(f, delimiter=',')
+        }
 
 
 def write_index(index):
@@ -45,7 +46,6 @@ def download_route(route_id, auth_params):
     Simulate downloading the route to disk.
     '''
     time.sleep(DOWNLOAD_DELAY)
-    pass
 
 
 def delete_route(route_id):
@@ -90,30 +90,32 @@ def sync(user_id, auth_params):
 
     # Build the new index and a set of outdated route IDs.
     new_index = {
-        r['id']: datetime.fromisoformat(r['updated_at'].replace('Z', '+00:00'))
-        for r in route_list
+        row['id']: datetime.fromisoformat(row['updated_at'].replace('Z', '+00:00'))
+        for row
+        in route_list
     }
-    outdated = {
+    outdated_route_ids = {
         route_id
-        for route_id, update_time in new_index.items()
+        for route_id, update_time
+        in new_index.items()
         if route_id not in current_index or current_index[route_id] < update_time
     }
 
     # Re-download any missing or outdated routes.
-    if outdated:
-        print(f'updating {len(outdated)} routes')
-        for i, route_id in enumerate(outdated, 1):
-            print(f'{i} / {len(outdated)}: {route_id}')
+    if outdated_route_ids:
+        print(f'updating {len(outdated_route_ids)} routes')
+        for i, route_id in enumerate(outdated_route_ids, 1):
+            print(f'{i} / {len(outdated_route_ids)}: {route_id}')
             download_route(route_id, auth_params)
 
     # Purge routes in the index that weren't in the returned list.
-    orphans = current_index.keys() - new_index.keys()
-    if orphans:
-        print(f'purging {len(orphans)} orphan routes')
-        for route_id in orphans:
+    orphan_route_ids = current_index.keys() - new_index.keys()
+    if orphan_route_ids:
+        print(f'purging {len(orphan_route_ids)} orphan routes')
+        for route_id in orphan_route_ids:
             delete_route(route_id)
 
-    if not orphans and not outdated:
+    if not orphan_route_ids and not outdated_route_ids:
         print('up-to-date!')
 
     # Finally, write the new index file.
