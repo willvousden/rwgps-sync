@@ -6,7 +6,7 @@ It keeps an index of route IDs and the times they were last updated, so that it 
 faster when there's nothing to do 🙂
 
 Each time it runs, it rebuilds a new version of the index from the RWGPS route list endpoint and
-compares it with the cached index.  Any outdated routes are re-downloaded, while orphans are purged.
+compares it with the cached index.  Any outdated routes are re-downloaded, while orphan routes (that no longer exist in the RWGPS account) are purged.
 
 When the index is up-to-date, no additional requests are made, and the script runs in just a few
 seconds (as long as it takes to fetch the route list).
