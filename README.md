@@ -15,15 +15,17 @@ Currently, it doesn't save the routes to disk, but just sleeps to simulate the d
 
 ## Dependencies
 
-* Python 3
-* The Requests library for Python: `pip3 install requests`
+* [Python 3](https://www.python.org/)
+* [Poetry](https://python-poetry.org/)
+
+Run `poetry install` in the root directory.
 
 ## Running
 
 To use the API's test user:
 
 ```
-./main.py --user-id 1 --api-key testkey1 --auth-token ''
+poetry run rwgps_sync/main.py --user-id 1 --api-key testkey1 --auth-token ''
 ```
 
 Try running it a second time to see that it runs much faster 🙂
