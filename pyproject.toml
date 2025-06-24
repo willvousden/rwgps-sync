@@ -1,18 +1,17 @@
-[tool.poetry]
+[project]
 name = "rwgps-sync"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = [
+    {name = "Your Name", email = "you@example.com"}
+]
 readme = "README.md"
-packages = [{include = "rwgps_sync"}]
+requires-python = ">=3.13"
+dependencies = [
+    "requests>=2.32.2",
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-requests = "^2.32.2"
-
-[tool.poetry.group.dev.dependencies]
-black = "^24.3.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+]
