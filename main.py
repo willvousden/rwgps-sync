@@ -7,13 +7,14 @@ import time
 
 from datetime import datetime
 from pathlib import Path
+from typing import Any, cast
 
-BASE_URI = "https://ridewithgps.com"
-INDEX_FILE = Path("index.txt")
-DOWNLOAD_DELAY = 0.2
+BASE_URI: str = "https://ridewithgps.com"
+INDEX_FILE: Path = Path("index.txt")
+DOWNLOAD_DELAY: float = 0.2
 
 
-def read_index():
+def read_index() -> dict[int, datetime]:
     """
     Return a map from route ID to update time from the route index file.
     """
@@ -27,7 +28,7 @@ def read_index():
         }
 
 
-def write_index(index):
+def write_index(index: dict[int, datetime]) -> None:
     """
     Produce an index file of all routes with columns:
 
@@ -40,21 +41,21 @@ def write_index(index):
             writer.writerow([route_id, update_time.isoformat()])
 
 
-def download_route(route_id, auth_params):
+def download_route(route_id: int, auth_params: dict[str, str]) -> None:
     """
     Simulate downloading the route to disk.
     """
     time.sleep(DOWNLOAD_DELAY)
 
 
-def delete_route(route_id):
+def delete_route(route_id: int) -> None:
     """
     Simulate deleting the route from disk.
     """
     pass
 
 
-def fetch_route_list(user_id, auth_params):
+def fetch_route_list(user_id: str, auth_params: dict[str, str]) -> list[dict[str, Any]]:
     """
     Fetch a list of all of a given user's routes from the RWGPS API.
     """
@@ -62,14 +63,18 @@ def fetch_route_list(user_id, auth_params):
     offset = 0
     limit = 100
 
-    results = []
+    results: list[dict[str, Any]] = []
     while True:
         r = requests.get(
             f"{BASE_URI}/users/{user_id}/routes.json",
-            params={"offset": offset, "limit": limit, **auth_params},
+            params={
+                "offset": str(offset),
+                "limit": str(limit),
+                **auth_params,
+            },
         )
 
-        j = r.json()
+        j: dict[str, Any] = r.json()
         results.extend(j["results"])
         if len(results) >= j["results_count"]:
             break
@@ -79,7 +84,7 @@ def fetch_route_list(user_id, auth_params):
     return results
 
 
-def sync(user_id, auth_params):
+def sync(user_id: str, auth_params: dict[str, str]) -> None:
     """
     Sync the currently downloaded routes with the RWGPS API.
     """
@@ -89,7 +94,9 @@ def sync(user_id, auth_params):
 
     # Build the new index and a set of outdated route IDs.
     new_index = {
-        row["id"]: datetime.fromisoformat(row["updated_at"].replace("Z", "+00:00"))
+        cast(int, row["id"]): datetime.fromisoformat(
+            row["updated_at"].replace("Z", "+00:00")
+        )
         for row in route_list
     }
     outdated_route_ids = {
@@ -125,5 +132,8 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--auth-token", required=True)
     parser.add_argument("-u", "--user-id", required=True)
     args = parser.parse_args()
-    auth_params = {"apikey": args.api_key, "auth_token": args.auth_token}
+    auth_params = {
+        "apikey": cast(str, args.api_key),
+        "auth_token": cast(str, args.auth_token),
+    }
     sync(args.user_id, auth_params)
