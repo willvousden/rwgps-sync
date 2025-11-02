@@ -6,14 +6,13 @@ authors = [
     {name = "Your Name", email = "you@example.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
     "requests>=2.32.2",
 ]
 
 [dependency-groups]
 dev = [
-    "black>=25.1.0",
     "mypy>=1.16.1",
     "types-requests>=2.32.4.20250611",
 ]
